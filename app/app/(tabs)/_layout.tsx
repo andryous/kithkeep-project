@@ -18,21 +18,13 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Birthday",
+          title: "Events",
           tabBarIcon: ({ color }) => (
             <MaterialIcons size={28} name="cake" color={color} />
           ),
         }}
       />
-      <Tabs.Screen
-        name="anniversaries"
-        options={{
-          title: "Anniversaries",
-          tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons size={28} name="heart" color={color} />
-          ),
-        }}
-      />
+      
     </Tabs>
   );
 }
