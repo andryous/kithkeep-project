@@ -1,6 +1,8 @@
 import { Text, View } from "react-native";
 
+
 export default function PantallaCumpleanos() {
+
   return (
     <View
       style={{
@@ -30,3 +32,4 @@ export default function PantallaCumpleanos() {
     </View>
   );
 }
+export const __pageId__ = "(tabs)/index";
