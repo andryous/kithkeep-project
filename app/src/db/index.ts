@@ -1,4 +1,5 @@
 import { openDatabaseSync } from "expo-sqlite";
+import { Contact } from "@/src/types";
 
 // Open the database connection synchronously
 export const db = openDatabaseSync("kithkeep.db");
@@ -29,5 +30,29 @@ export const initDb = () => {
     console.log("Database initialized successfully");
   } catch (error) {
     console.error("Failed to initialize database:", error);
+  }
+}; 
+
+/**
+ * Adds a new contact to the database.
+ * Uses the synchronous API for simplicity.
+ */
+export const addContact = (contact: Omit<Contact, "id">) => {
+  const statement = db.prepareSync(
+    `INSERT INTO contacts (name, date_iso, type, group_name, notes) VALUES ($name, $date_iso, $type, $group_name, $notes)`
+  );
+
+  try {
+    const result = statement.executeSync({
+      $name: contact.name,
+      $date_iso: contact.date_iso,
+      $type: contact.type,
+      $group_name: contact.group_name,
+      $notes: contact.notes || null,
+    });
+
+    return result.lastInsertRowId;
+  } finally {
+    statement.finalizeSync();
   }
 };
