@@ -1,7 +1,16 @@
-import { Text, View } from "react-native";
-
-
-export default function PantallaCumpleanos() {
+import { Text, View, Button } from "react-native";
+import { addContact } from "@/src/db";
+export default function BirthdayScreen() {
+  function createTestContact() {
+    const newContactId = addContact({
+      name: "John Doe",
+      date_iso: "1990-01-01",
+      type: "Birthday",
+      group_name: "Friends",
+      notes: "Test contact",
+    });
+    console.log("New contact added with ID:", newContactId); 
+  }
 
   return (
     <View
@@ -29,7 +38,17 @@ export default function PantallaCumpleanos() {
       >
         Here we will see the birthday list.
       </Text>
+      
+  
+
+        <View style={{ marginTop: 20 }}>
+          <Button 
+            title="Add test Contact" 
+           onPress={createTestContact}
+          />
+        </View>
     </View>
+  
   );
 }
 export const __pageId__ = "(tabs)/index";
