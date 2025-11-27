@@ -1,18 +1,18 @@
 import { Text, View, Button, FlatList } from "react-native";
 import { useEffect, useState } from "react";
-import { addContact, getContacts } from "@/src/db";
+import { addContact, getContacts, deleteContact } from "@/src/db"; // Added deleteContact
 import { Contact } from "@/src/types";
 
 export default function BirthdayScreen() {
   const [contacts, setContacts] = useState<Contact[]>([]);
 
-  // 1. Function to load data from DB to State
+  // Function to load data from DB to State
   function loadData() {
     const fetchedContacts = getContacts();
-    setContacts(fetchedContacts); // Updates the UI
+    setContacts(fetchedContacts);
   }
 
-  // 2. Initial load when the app starts
+  // Initial load
   useEffect(() => {
     loadData();
   }, []);
@@ -25,9 +25,13 @@ export default function BirthdayScreen() {
       group_name: "Friends",
       notes: "Test contact",
     });
+    loadData(); // Refresh list after adding
+  }
 
-    // 3. REFRESH: Reload data after adding so the new contact appears immediately
-    loadData();
+  // Function to handle DELETION
+  function handleDelete(id: number) {
+    deleteContact(id);
+    loadData(); // Refresh list immediately after deleting
   }
 
   return (
@@ -37,7 +41,7 @@ export default function BirthdayScreen() {
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "#000",
-        paddingTop: 50, // Added padding to avoid status bar
+        paddingTop: 50,
       }}
     >
       <Text
@@ -51,10 +55,9 @@ export default function BirthdayScreen() {
         KithKeep: Birthday
       </Text>
 
-      {/* 4. THE LIST: Displays the contacts */}
       <FlatList
         data={contacts}
-        keyExtractor={(item) => item.id.toString()} // Unique ID for each item
+        keyExtractor={(item) => item.id.toString()}
         style={{ width: "100%", paddingHorizontal: 20 }}
         renderItem={({ item }) => (
           <View
@@ -64,15 +67,31 @@ export default function BirthdayScreen() {
               borderRadius: 10,
               marginBottom: 10,
               borderLeftWidth: 4,
-              borderLeftColor: "#4A90E2", // Blue accent
+              borderLeftColor: "#4A90E2",
+              // Layout change: Row to align text left and button right
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
             }}
           >
-            <Text style={{ color: "#FFF", fontWeight: "bold", fontSize: 18 }}>
-              {item.name}
-            </Text>
-            <Text style={{ color: "#AAA" }}>
-              {item.date_iso} ({item.type})
-            </Text>
+            {/* Left side: Text Info */}
+            <View>
+              <Text style={{ color: "#FFF", fontWeight: "bold", fontSize: 18 }}>
+                {item.name}
+              </Text>
+              <Text style={{ color: "#AAA" }}>
+                {item.date_iso} ({item.type})
+              </Text>
+            </View>
+
+            {/* Right side: Delete Button */}
+            <View>
+              <Button
+                title="X"
+                color="#FF453A" // iOS red system color
+                onPress={() => handleDelete(item.id)}
+              />
+            </View>
           </View>
         )}
         ListEmptyComponent={
