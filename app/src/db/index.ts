@@ -15,7 +15,7 @@ const MIGRATIONS = [
     group_name TEXT NOT NULL,
     notes TEXT
   );
-  `
+  `,
 ];
 
 /**
@@ -31,7 +31,7 @@ export const initDb = () => {
   } catch (error) {
     console.error("Failed to initialize database:", error);
   }
-}; 
+};
 
 /**
  * Adds a new contact to the database.
@@ -57,20 +57,10 @@ export const addContact = (contact: Omit<Contact, "id">) => {
   }
 };
 
+/**
+ * Retrieves all contacts from the database.
+ * Uses getAllSync for a clean, one-line query execution.
+ */
 export const getContacts = (): Contact[] => {
-  const statement = db.prepareSync(`SELECT * FROM contacts`);
-  
-  try {
-    const result = statement.executeSync();
-    const contacts: Contact[] = [];
-    
-    // Iterate over all rows in the result
-    for (const row of result) {
-      contacts.push(row as Contact);
-    }
-    
-    return contacts;
-  } finally {
-    statement.finalizeSync();
-  }
+  return db.getAllSync<Contact>("SELECT * FROM contacts");
 };
