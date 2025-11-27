@@ -56,3 +56,21 @@ export const addContact = (contact: Omit<Contact, "id">) => {
     statement.finalizeSync();
   }
 };
+
+export const getContacts = (): Contact[] => {
+  const statement = db.prepareSync(`SELECT * FROM contacts`);
+  
+  try {
+    const result = statement.executeSync();
+    const contacts: Contact[] = [];
+    
+    // Iterate over all rows in the result
+    for (const row of result) {
+      contacts.push(row as Contact);
+    }
+    
+    return contacts;
+  } finally {
+    statement.finalizeSync();
+  }
+};
