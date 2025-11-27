@@ -64,3 +64,12 @@ export const addContact = (contact: Omit<Contact, "id">) => {
 export const getContacts = (): Contact[] => {
   return db.getAllSync<Contact>("SELECT * FROM contacts");
 };
+
+/**
+ * Deletes a specific contact from the database by ID.
+ * Uses runSync for a direct and simple execution.
+ * * @param id - The unique identifier of the contact to delete.
+ */
+export const deleteContact = (id: number) => {
+  db.runSync("DELETE FROM contacts WHERE id = $id", { $id: id });
+};
